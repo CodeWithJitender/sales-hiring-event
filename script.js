@@ -183,19 +183,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
   sections.forEach(section => sectionObserver.observe(section));
 
-  // ── Parallax-like effect on hero shapes ────────────────────────────
+  // ── Parallax on Scroll ─────────────────────────────────────────────
   const heroShapes = document.querySelectorAll('.hero-shape');
+  const heroBgImage = document.querySelector('.hero-bg-image');
+  const heroGradient = document.querySelector('.hero-gradient');
+  const heroSection = document.querySelector('.hero-section');
 
-  window.addEventListener('mousemove', (e) => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 2;
-    const y = (e.clientY / window.innerHeight - 0.5) * 2;
+  // Mouse parallax on hero shapes (desktop only)
+  if (window.innerWidth > 768) {
+    window.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
 
-    heroShapes.forEach((shape, index) => {
-      const speed = (index + 1) * 8;
-      const rotateSpeed = (index + 1) * 2;
-      shape.style.transform = `translate(${x * speed}px, ${y * speed}px) rotate(${x * rotateSpeed}deg)`;
+      heroShapes.forEach((shape, index) => {
+        const speed = (index + 1) * 8;
+        const rotateSpeed = (index + 1) * 2;
+        shape.style.transform = `translate(${x * speed}px, ${y * speed}px) rotate(${x * rotateSpeed}deg)`;
+      });
+    }, { passive: true });
+  }
+
+  // Scroll-based parallax
+  let ticking = false;
+  function onScrollParallax() {
+    if (ticking) return;
+    ticking = true;
+
+    requestAnimationFrame(() => {
+      const scrollY = window.pageYOffset;
+      const heroHeight = heroSection ? heroSection.offsetHeight : 800;
+
+      // Parallax hero background image
+      if (heroBgImage && scrollY < heroHeight) {
+        heroBgImage.style.transform = `translateY(${scrollY * 0.3}px) scale(1.1)`;
+      }
+
+      // Parallax hero gradient
+      if (heroGradient && scrollY < heroHeight) {
+        heroGradient.style.transform = `translate(-50%, -50%) scale(${1 + scrollY * 0.0003})`;
+      }
+
+      // Parallax hero shapes on scroll
+      if (scrollY < heroHeight) {
+        heroShapes.forEach((shape, index) => {
+          const speed = (index + 1) * 0.04;
+          shape.style.marginTop = `${scrollY * speed}px`;
+        });
+      }
+
+      ticking = false;
     });
-  }, { passive: true });
+  }
+
+  window.addEventListener('scroll', onScrollParallax, { passive: true });
+
+  // ── Card Tilt Effect (Desktop Only) ────────────────────────────────
+  if (window.innerWidth > 768) {
+    const tiltCards = document.querySelectorAll('.benefit-card, .eligibility-card');
+
+    tiltCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / centerY * -4;
+        const rotateY = (x - centerX) / centerX * 4;
+
+        card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  }
 
   // ── Counter Animation for Hero Stats ───────────────────────────────
   const statValues = document.querySelectorAll('.hero-stat-value');

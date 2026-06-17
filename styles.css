@@ -117,6 +117,25 @@ img {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-cta), var(--color-accent-blue));
+  margin: 12px auto 0;
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.active .section-title::after,
+.section-title.active::after {
+  width: 120px;
 }
 
 .section-subtitle {
@@ -906,7 +925,8 @@ img {
   border: 1px solid var(--color-card-border);
   background: var(--color-bg-primary);
   overflow: hidden;
-  transition: all var(--transition-base);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 .eligibility-card::before {
@@ -931,13 +951,20 @@ img {
 }
 
 .eligibility-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-10px) scale(1.02);
   border-color: var(--color-cta);
-  box-shadow: 0 20px 60px rgba(237, 103, 10, 0.15);
+  box-shadow:
+    0 20px 60px rgba(237, 103, 10, 0.15),
+    0 0 30px rgba(237, 103, 10, 0.05);
 }
 
 .eligibility-card:hover::after {
   transform: scaleX(1);
+}
+
+.eligibility-card:hover .card-icon-circle {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 12px 40px rgba(237, 103, 10, 0.4);
 }
 
 .eligibility-card:nth-child(2) {
@@ -955,6 +982,7 @@ img {
   margin-bottom: 20px;
   flex-shrink: 0;
   box-shadow: 0 8px 30px rgba(237, 103, 10, 0.3);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-icon-circle svg {
@@ -1039,6 +1067,18 @@ img {
   flex-shrink: 0;
   z-index: 2;
   box-shadow: 0 4px 20px rgba(3, 80, 227, 0.4);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeline-step:hover .step-number {
+  transform: scale(1.15);
+  box-shadow: 0 6px 30px rgba(3, 80, 227, 0.6);
+}
+
+.timeline-step:hover .step-content {
+  transform: translateX(6px);
+  border-color: var(--color-accent-blue-light);
+  box-shadow: 0 10px 30px rgba(3, 80, 227, 0.15);
 }
 
 .step-connector {
@@ -1057,7 +1097,7 @@ img {
   overflow: hidden;
   border: 1px solid rgba(3, 80, 227, 0.2);
   background: var(--color-bg-primary);
-  transition: all var(--transition-base);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .step-content::before {
@@ -1106,9 +1146,10 @@ img {
   border-radius: var(--radius-md);
   background: rgba(4, 20, 76, 0.5);
   border: 1px solid var(--color-border);
-  transition: all var(--transition-base);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
+  will-change: transform;
 }
 
 .benefit-card::before {
@@ -1123,9 +1164,16 @@ img {
 }
 
 .benefit-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--color-accent-blue);
-  box-shadow: 0 15px 40px rgba(3, 80, 227, 0.15);
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--color-accent-blue-light);
+  box-shadow:
+    0 15px 40px rgba(3, 80, 227, 0.2),
+    0 0 20px rgba(3, 80, 227, 0.05);
+}
+
+.benefit-card:hover .benefit-icon {
+  transform: scale(1.15) rotate(-5deg);
+  box-shadow: 0 8px 25px rgba(3, 80, 227, 0.5);
 }
 
 .benefit-icon {
@@ -1138,6 +1186,7 @@ img {
   justify-content: center;
   margin-bottom: 20px;
   box-shadow: 0 4px 15px rgba(3, 80, 227, 0.3);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .benefit-icon svg {
@@ -1171,12 +1220,14 @@ img {
   border-radius: var(--radius-md);
   margin-bottom: 12px;
   overflow: hidden;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   background: rgba(4, 20, 76, 0.3);
 }
 
 .faq-item:hover {
   border-color: var(--color-accent-blue);
+  box-shadow: 0 4px 20px rgba(3, 80, 227, 0.08);
+  transform: translateX(4px);
 }
 
 .faq-item.active {
@@ -1336,6 +1387,7 @@ img {
 .footer-social-center a:hover {
   border-color: var(--color-cta);
   background: rgba(237, 103, 10, 0.1);
+  transform: translateY(-4px) scale(1.1);
 }
 
 .footer-social-center a svg {
@@ -1536,6 +1588,25 @@ img {
 
   .countdown-block {
     min-width: 48px;
+  }
+
+  /* Disable heavy hover effects on mobile */
+  .eligibility-card:hover,
+  .benefit-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .eligibility-card,
+  .benefit-card {
+    will-change: auto;
+  }
+
+  .timeline-step:hover .step-content {
+    transform: none;
+  }
+
+  .faq-item:hover {
+    transform: none;
   }
 }
 
