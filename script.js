@@ -255,6 +255,86 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     statsObserver.observe(heroStatsEl);
   }
+  // ── Form Validation Helpers ─────────────────────────────────────────
+  function showFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    clearFieldError(fieldId);
+    field.style.borderColor = '#ff4444';
+    const errorEl = document.createElement('span');
+    errorEl.className = 'field-error';
+    errorEl.textContent = message;
+    errorEl.style.cssText = 'color:#ff6b6b;font-size:0.78rem;margin-top:4px;display:block;';
+    field.parentElement.appendChild(errorEl);
+  }
+
+  function clearFieldError(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    field.style.borderColor = '';
+    const existing = field.parentElement.querySelector('.field-error');
+    if (existing) existing.remove();
+  }
+
+  function sanitize(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML.trim();
+  }
+
+  function validateForm() {
+    let isValid = true;
+
+    // Name: letters, spaces, dots, hyphens only — min 2 chars
+    const nameVal = document.getElementById('form-name').value.trim();
+    clearFieldError('form-name');
+    if (nameVal.length < 2) {
+      showFieldError('form-name', 'Name must be at least 2 characters.');
+      isValid = false;
+    } else if (!/^[a-zA-Z\s.\-']+$/.test(nameVal)) {
+      showFieldError('form-name', 'Name can only contain letters, spaces, dots and hyphens.');
+      isValid = false;
+    }
+
+    // Email: standard email regex
+    const emailVal = document.getElementById('form-email').value.trim();
+    clearFieldError('form-email');
+    const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(emailVal)) {
+      showFieldError('form-email', 'Please enter a valid email address.');
+      isValid = false;
+    }
+
+    // Phone: 10-digit Indian mobile number (optional +91 prefix)
+    const phoneVal = document.getElementById('form-phone').value.trim();
+    clearFieldError('form-phone');
+    const phoneClean = phoneVal.replace(/[\s\-\+]/g, '');
+    const phoneRegex = /^(91)?[6-9]\d{9}$/;
+    if (!phoneRegex.test(phoneClean)) {
+      showFieldError('form-phone', 'Please enter a valid 10-digit Indian mobile number.');
+      isValid = false;
+    }
+
+    // Message: optional but sanitize — max 1000 chars
+    const messageVal = document.getElementById('form-message').value.trim();
+    clearFieldError('form-message');
+    if (messageVal.length > 1000) {
+      showFieldError('form-message', 'Message must be under 1000 characters.');
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  // Real-time validation on blur
+  ['form-name', 'form-email', 'form-phone', 'form-message'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('blur', () => validateForm());
+      el.addEventListener('input', () => clearFieldError(id));
+    }
+  });
+
   // ── EmailJS Form Submission ────────────────────────────────────────
   const contactForm = document.getElementById('contact-form');
   const submitBtn = document.getElementById('form-submit-btn');
@@ -262,6 +342,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (contactForm && submitBtn) {
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
+
+      // Run validation first
+      if (!validateForm()) return;
 
       // Show loading state
       const btnText = submitBtn.querySelector('.btn-text');
@@ -271,12 +354,12 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.disabled = true;
       submitBtn.style.opacity = '0.7';
 
-      // Gather form data
+      // Gather & sanitize form data
       const templateParams = {
-        name: document.getElementById('form-name').value,
-        email: document.getElementById('form-email').value,
-        phone: document.getElementById('form-phone').value,
-        message: document.getElementById('form-message').value,
+        name: sanitize(document.getElementById('form-name').value.trim()),
+        email: sanitize(document.getElementById('form-email').value.trim()),
+        phone: sanitize(document.getElementById('form-phone').value.trim()),
+        message: sanitize(document.getElementById('form-message').value.trim()),
         time: new Date().toLocaleString('en-IN', {
           dateStyle: 'full',
           timeStyle: 'short',
