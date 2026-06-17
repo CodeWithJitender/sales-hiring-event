@@ -9,39 +9,31 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── EmailJS Initialization ─────────────────────────────────────────
   emailjs.init('QpkBmnT4LJ4PGyWTX');
 
-  // ── Mobile Menu ────────────────────────────────────────────────────
-  const menuToggle = document.getElementById('menu-toggle');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const mobileOverlay = document.getElementById('mobile-overlay');
-  const mobileLinks = mobileMenu.querySelectorAll('a');
-
-  function openMenu() {
-    menuToggle.classList.add('active');
-    mobileMenu.classList.add('active');
-    mobileOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
+  // ── Phone Input: Numbers Only ──────────────────────────────────────
+  const phoneInput = document.getElementById('form-phone');
+  if (phoneInput) {
+    phoneInput.addEventListener('input', () => {
+      phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '');
+    });
+    phoneInput.addEventListener('keydown', (e) => {
+      // Allow: backspace, delete, tab, escape, enter, arrows
+      const allowed = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
+        'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+      if (allowed.includes(e.key)) return;
+      // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      if ((e.ctrlKey || e.metaKey) && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
+      // Block non-numeric
+      if (!/^[0-9]$/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+    // Handle paste — strip non-digits
+    phoneInput.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData('text');
+      phoneInput.value = pasted.replace(/[^0-9]/g, '').slice(0, 10);
+    });
   }
-
-  function closeMenu() {
-    menuToggle.classList.remove('active');
-    mobileMenu.classList.remove('active');
-    mobileOverlay.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  menuToggle.addEventListener('click', () => {
-    if (mobileMenu.classList.contains('active')) {
-      closeMenu();
-    } else {
-      openMenu();
-    }
-  });
-
-  mobileOverlay.addEventListener('click', closeMenu);
-
-  mobileLinks.forEach(link => {
-    link.addEventListener('click', closeMenu);
-  });
 
   // ── Navbar Scroll Effect ───────────────────────────────────────────
   const navbar = document.getElementById('navbar');

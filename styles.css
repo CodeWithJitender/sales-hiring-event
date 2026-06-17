@@ -429,6 +429,8 @@ img {
   justify-content: center;
   overflow: hidden;
   background: var(--color-bg-secondary);
+  padding-top: calc(var(--nav-height) + 30px);
+  padding-bottom: 40px;
 }
 
 .hero-bg {
@@ -1262,56 +1264,65 @@ img {
 .footer {
   background: var(--color-bg-secondary);
   border-top: 1px solid var(--color-border);
-  padding: 80px 0 0;
+  padding: 60px 0 0;
 }
 
-.footer-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 40px;
-  margin-bottom: 60px;
+.footer-content {
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-.footer-brand p {
+.footer-brand-center {
+  margin-bottom: 32px;
+}
+
+.footer-brand-center .nav-logo {
+  justify-content: center;
+  font-size: 1.8rem;
+}
+
+.footer-desc {
   color: var(--color-text-muted);
   font-size: 0.95rem;
   line-height: 1.7;
-  margin-top: 16px;
-  max-width: 320px;
+  margin-top: 12px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.footer-title {
-  font-family: var(--font-heading);
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 20px;
-  color: var(--color-text-white);
-}
-
-.footer-links {
+.footer-info-row {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
 }
 
-.footer-links a {
+.footer-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: var(--color-text-muted);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+}
+
+.footer-contact-item a {
+  color: var(--color-text-muted);
   transition: color var(--transition-fast);
 }
 
-.footer-links a:hover {
+.footer-contact-item a:hover {
   color: var(--color-cta);
 }
 
-.footer-social {
+.footer-social-center {
   display: flex;
+  justify-content: center;
   gap: 12px;
-  margin-top: 24px;
 }
 
-.footer-social a {
+.footer-social-center a {
   width: 40px;
   height: 40px;
   border-radius: var(--radius-full);
@@ -1322,19 +1333,19 @@ img {
   transition: all var(--transition-base);
 }
 
-.footer-social a:hover {
+.footer-social-center a:hover {
   border-color: var(--color-cta);
   background: rgba(237, 103, 10, 0.1);
 }
 
-.footer-social a svg {
+.footer-social-center a svg {
   width: 18px;
   height: 18px;
   fill: var(--color-text-muted);
   transition: fill var(--transition-fast);
 }
 
-.footer-social a:hover svg {
+.footer-social-center a:hover svg {
   fill: var(--color-cta);
 }
 
@@ -1428,10 +1439,6 @@ img {
     display: none;
   }
 
-  .hamburger {
-    display: flex;
-  }
-
   .journey-grid {
     flex-direction: column;
     gap: 40px;
@@ -1443,10 +1450,6 @@ img {
 
   .journey-text p {
     text-align: center;
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -1493,8 +1496,12 @@ img {
     left: 18px;
   }
 
+  .hero-tag {
+    display: none;
+  }
+
   .hero-form-card {
-    padding: 28px 24px;
+    padding: 28px 20px;
   }
 
   .hero-stats {
@@ -1505,16 +1512,22 @@ img {
   }
 
   .hero-stat-value {
-    font-size: 2rem;
+    font-size: 1.8rem;
+  }
+
+  .btn-primary,
+  .btn-outline {
+    padding: 12px 24px;
+    font-size: 0.85rem;
+  }
+
+  .nav-cta .btn-cta {
+    padding: 8px 16px;
+    font-size: 0.75rem;
   }
 
   .benefits-grid {
     grid-template-columns: 1fr;
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
   }
 
   .countdown-timer {
@@ -1528,13 +1541,19 @@ img {
 
 @media (max-width: 480px) {
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
   }
 
   .hero-cta .btn-primary,
   .hero-cta .btn-outline {
     width: 100%;
     justify-content: center;
+    padding: 12px 20px;
+    font-size: 0.8rem;
   }
 
   .section-title {
@@ -1549,6 +1568,12 @@ img {
   .card-icon-circle svg {
     width: 28px;
     height: 28px;
+  }
+
+  .footer-info-row {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
   }
 }
 
