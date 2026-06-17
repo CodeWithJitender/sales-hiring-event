@@ -1,9 +1,13 @@
 /* ===================================================================
    SALES HIRING EVENT — MAIN JAVASCRIPT
-   Handles: Mobile menu, countdown, scroll reveal, FAQ, navbar effects
+   Handles: Mobile menu, countdown, scroll reveal, FAQ, navbar,
+            EmailJS form submission, hero parallax
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+
+  // ── EmailJS Initialization ─────────────────────────────────────────
+  emailjs.init('QpkBmnT4LJ4PGyWTX');
 
   // ── Mobile Menu ────────────────────────────────────────────────────
   const menuToggle = document.getElementById('menu-toggle');
@@ -250,6 +254,51 @@ document.addEventListener('DOMContentLoaded', () => {
       { threshold: 0.5 }
     );
     statsObserver.observe(heroStatsEl);
+  }
+  // ── EmailJS Form Submission ────────────────────────────────────────
+  const contactForm = document.getElementById('contact-form');
+  const submitBtn = document.getElementById('form-submit-btn');
+
+  if (contactForm && submitBtn) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Show loading state
+      const btnText = submitBtn.querySelector('.btn-text');
+      const btnLoader = submitBtn.querySelector('.btn-loader');
+      btnText.style.display = 'none';
+      btnLoader.style.display = 'inline-flex';
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.7';
+
+      // Gather form data
+      const templateParams = {
+        name: document.getElementById('form-name').value,
+        email: document.getElementById('form-email').value,
+        phone: document.getElementById('form-phone').value,
+        message: document.getElementById('form-message').value,
+        time: new Date().toLocaleString('en-IN', {
+          dateStyle: 'full',
+          timeStyle: 'short',
+        }),
+      };
+
+      // Send via EmailJS
+      emailjs.send('service_5ukbpwr', 'template_s33irls', templateParams)
+        .then(() => {
+          // Redirect to thank you page on success
+          window.location.href = 'thankyou.html';
+        })
+        .catch((error) => {
+          console.error('EmailJS Error:', error);
+          alert('Something went wrong. Please try again or contact us directly.');
+          // Reset button state
+          btnText.style.display = '';
+          btnLoader.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+        });
+    });
   }
 
 });

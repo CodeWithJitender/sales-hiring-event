@@ -16,6 +16,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -39,7 +42,7 @@
       </div>
 
       <div class="nav-cta">
-        <button class="btn-cta" onclick="window.open('#', '_blank')">Apply Now</button>
+        <a href="#hero" class="btn-cta">Apply Now</a>
       </div>
 
       <button class="hamburger" id="menu-toggle" aria-label="Toggle navigation menu">
@@ -68,8 +71,9 @@
 
   <!-- ═══════════════════ HERO SECTION ═══════════════════ -->
   <section id="hero" class="hero-section">
-    <!-- Animated Background -->
+    <!-- Background Image + Overlays -->
     <div class="hero-bg">
+      <div class="hero-bg-image"></div>
       <div class="hero-gradient"></div>
       <div class="hero-gradient-2"></div>
       <div class="hero-shape shape-1"></div>
@@ -80,35 +84,72 @@
       <div class="hero-grid"></div>
     </div>
 
-    <!-- Hero Content -->
-    <div class="hero-content">
-      <span class="hero-tag">🚀 Limited Seats Available</span>
-      <h1 class="hero-title">
-        SALES <span class="highlight">HIRING</span> EVENT
-      </h1>
-      <p class="hero-subtitle">
-        Your next career breakthrough starts here. Join a team that's redefining
-        sales excellence and shaping the future of business growth.
-      </p>
-      <div class="hero-cta">
-        <a href="#" class="btn-primary">
-          Apply Now
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-        <a href="#about" class="btn-outline">Learn More</a>
+    <!-- Hero Split Layout: Text Left + Form Right -->
+    <div class="hero-content hero-split">
+      <!-- Left Side: Text -->
+      <div class="hero-text">
+        <span class="hero-tag">🚀 Limited Seats Available</span>
+        <h1 class="hero-title">
+          SALES <span class="highlight">HIRING</span> EVENT
+        </h1>
+        <p class="hero-subtitle">
+          Your next career breakthrough starts here. Join a team that's redefining
+          sales excellence and shaping the future of business growth.
+        </p>
+        <div class="hero-cta">
+          <a href="#hero" class="btn-primary">
+            Apply Now
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#about" class="btn-outline">Learn More</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-value">50+</div>
+            <div class="hero-stat-label">Open Roles</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value">10+</div>
+            <div class="hero-stat-label">Cities</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value">₹15L+</div>
+            <div class="hero-stat-label">Top Package</div>
+          </div>
+        </div>
       </div>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <div class="hero-stat-value">50+</div>
-          <div class="hero-stat-label">Open Roles</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-value">10+</div>
-          <div class="hero-stat-label">Cities</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-value">₹15L+</div>
-          <div class="hero-stat-label">Top Package</div>
+
+      <!-- Right Side: Application Form -->
+      <div class="hero-form-wrapper">
+        <div class="hero-form-card">
+          <div class="form-header">
+            <h3 class="form-title">Apply Now</h3>
+            <p class="form-subtitle">Fill in your details and we'll reach out to you</p>
+          </div>
+          <form id="contact-form" autocomplete="on">
+            <div class="form-group">
+              <label for="form-name">Full Name <span class="required">*</span></label>
+              <input type="text" id="form-name" name="name" placeholder="Enter your full name" required />
+            </div>
+            <div class="form-group">
+              <label for="form-email">Email Address <span class="required">*</span></label>
+              <input type="email" id="form-email" name="email" placeholder="Enter your email" required />
+            </div>
+            <div class="form-group">
+              <label for="form-phone">Mobile Number <span class="required">*</span></label>
+              <input type="tel" id="form-phone" name="phone" placeholder="Enter your mobile number" required />
+            </div>
+            <div class="form-group">
+              <label for="form-message">Message</label>
+              <textarea id="form-message" name="message" placeholder="Tell us about yourself and why you're interested" rows="4"></textarea>
+            </div>
+            <button type="submit" class="btn-primary btn-submit" id="form-submit-btn">
+              <span class="btn-text">Submit Application</span>
+              <span class="btn-loader" style="display:none;">
+                <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.3"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+              </span>
+            </button>
+          </form>
         </div>
       </div>
     </div>

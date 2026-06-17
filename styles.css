@@ -437,6 +437,14 @@ img {
   overflow: hidden;
 }
 
+.hero-bg-image {
+  position: absolute;
+  inset: 0;
+  background: url('assets/hero-bg.png') center center / cover no-repeat;
+  opacity: 0.35;
+  z-index: 0;
+}
+
 .hero-gradient {
   position: absolute;
   top: 50%;
@@ -551,13 +559,24 @@ img {
   100% { transform: translate(60px, 60px); }
 }
 
-/* Hero Content */
+/* Hero Content — Split Layout */
 .hero-content {
   position: relative;
   z-index: 10;
-  text-align: center;
   padding: 0 24px;
-  max-width: 900px;
+  max-width: var(--container-max);
+  width: 100%;
+}
+
+.hero-split {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+.hero-text {
+  flex: 1;
+  text-align: left;
 }
 
 .hero-tag {
@@ -597,7 +616,7 @@ img {
   font-size: clamp(1rem, 2.5vw, 1.3rem);
   color: var(--color-text-muted);
   max-width: 650px;
-  margin: 0 auto 40px;
+  margin: 0 0 40px;
   line-height: 1.8;
   animation: fadeInUp 0.8s ease 0.4s forwards;
   opacity: 0;
@@ -608,13 +627,13 @@ img {
   opacity: 0;
   display: flex;
   gap: 16px;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 
 .hero-stats {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 48px;
   margin-top: 60px;
   animation: fadeInUp 0.8s ease 0.8s forwards;
@@ -649,6 +668,126 @@ img {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ── Hero Form ───────────────────────────────────────────────────── */
+.hero-form-wrapper {
+  flex: 0 0 420px;
+  animation: fadeInUp 0.8s ease 0.5s forwards;
+  opacity: 0;
+}
+
+.hero-form-card {
+  background: rgba(2, 10, 31, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-cta), var(--color-accent-blue));
+}
+
+.form-header {
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.form-title {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--color-cta) 0%, var(--color-cta-hover) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.form-subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.form-group label .required {
+  color: var(--color-cta);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-white);
+  background: rgba(4, 20, 76, 0.5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: all var(--transition-base);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(184, 199, 232, 0.4);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--color-cta);
+  box-shadow: 0 0 0 3px rgba(237, 103, 10, 0.15);
+  background: rgba(4, 20, 76, 0.7);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.btn-submit {
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+  padding: 16px;
+  font-size: 1rem;
+}
+
+.btn-loader {
+  display: inline-flex;
+  align-items: center;
+}
+
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* ── Countdown Strip ─────────────────────────────────────────────── */
@@ -1257,6 +1396,34 @@ img {
 
 /* ── Responsive Design ───────────────────────────────────────────── */
 @media (max-width: 1024px) {
+  .hero-split {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .hero-text {
+    text-align: center;
+  }
+
+  .hero-subtitle {
+    margin: 0 auto 40px;
+  }
+
+  .hero-cta {
+    justify-content: center;
+  }
+
+  .hero-stats {
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .hero-form-wrapper {
+    flex: none;
+    width: 100%;
+    max-width: 480px;
+  }
+
   .nav-links {
     display: none;
   }
@@ -1280,10 +1447,6 @@ img {
 
   .footer-grid {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .hero-stats {
-    gap: 32px;
   }
 }
 
@@ -1330,9 +1493,15 @@ img {
     left: 18px;
   }
 
+  .hero-form-card {
+    padding: 28px 24px;
+  }
+
   .hero-stats {
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: row;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .hero-stat-value {
