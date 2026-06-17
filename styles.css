@@ -122,6 +122,14 @@ img {
   width: 100%;
 }
 
+/* When split into chars, move gradient to individual chars */
+.section-title[data-split] {
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+}
+
 .section-title::after {
   content: '';
   display: block;
@@ -622,11 +630,19 @@ img {
   text-transform: uppercase;
   margin-bottom: 24px;
   letter-spacing: 3px;
-  animation: fadeInUp 0.8s ease 0.2s forwards;
-  opacity: 0;
+  color: var(--color-text-white);
 }
 
-.hero-title .highlight {
+/* Hero title chars: white text */
+.hero-title[data-split] .char {
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: var(--color-text-white);
+  background-clip: unset;
+}
+
+/* Hero title highlight chars: orange gradient */
+.hero-title[data-split] .highlight .char {
   background: linear-gradient(135deg, var(--color-cta) 0%, var(--color-cta-hover) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1409,23 +1425,28 @@ img {
   font-size: 0.85rem;
 }
 
-/* ── Split Text Animation ────────────────────────────────────────── */
+/* ── Split Text Animation ──────────────────────────────────────── */
 [data-split] .char {
   display: inline-block;
-  opacity: 0;
-  transform: translateY(60px) rotateX(-40deg);
   transform-origin: bottom center;
+  /* Gradient text effect applied to each char */
+  background: linear-gradient(135deg, var(--color-cta) 0%, var(--color-cta-hover) 50%, var(--color-text-white) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 [data-split] .word {
   display: inline-block;
-  overflow: hidden;
   margin-right: 0.2em;
 }
 
 /* Preserve highlight span styling inside split text */
 [data-split] .highlight .char {
-  -webkit-text-fill-color: var(--color-cta);
+  background: var(--color-cta);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* ── GSAP Timeline Draw ─────────────────────────────────────────── */
