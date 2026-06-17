@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sales Hiring Event — Join Our Winning Team</title>
+  <meta name="description" content="Join our exclusive sales hiring event. Discover exciting career opportunities, competitive packages, and a path to growth in a dynamic sales environment." />
+  <meta name="keywords" content="sales hiring, career event, sales jobs, hiring event, sales careers" />
+  <meta property="og:title" content="Sales Hiring Event — Join Our Winning Team" />
+  <meta property="og:description" content="Your next career breakthrough starts here. Apply now for exciting sales positions." />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo" id="nav-logo">
+        SALES<span class="logo-accent">HUB</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#eligibility">Who Can Apply</a>
+        <a href="#journey">The Process</a>
+        <a href="#benefits">Benefits</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <div class="nav-cta">
+        <button class="btn-cta" onclick="window.open('#', '_blank')">Apply Now</button>
+      </div>
+
+      <button class="hamburger" id="menu-toggle" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" id="mobile-overlay"></div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-nav-links">
+      <a href="#about">About</a>
+      <a href="#eligibility">Who Can Apply</a>
+      <a href="#journey">The Process</a>
+      <a href="#benefits">Benefits</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════ HERO SECTION ═══════════════════ -->
+  <section id="hero" class="hero-section">
+    <!-- Animated Background -->
+    <div class="hero-bg">
+      <div class="hero-gradient"></div>
+      <div class="hero-gradient-2"></div>
+      <div class="hero-shape shape-1"></div>
+      <div class="hero-shape shape-2"></div>
+      <div class="hero-shape shape-3"></div>
+      <div class="hero-shape shape-4"></div>
+      <div class="hero-shape shape-5"></div>
+      <div class="hero-grid"></div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="hero-content">
+      <span class="hero-tag">🚀 Limited Seats Available</span>
+      <h1 class="hero-title">
+        SALES <span class="highlight">HIRING</span> EVENT
+      </h1>
+      <p class="hero-subtitle">
+        Your next career breakthrough starts here. Join a team that's redefining
+        sales excellence and shaping the future of business growth.
+      </p>
+      <div class="hero-cta">
+        <a href="#" class="btn-primary">
+          Apply Now
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#about" class="btn-outline">Learn More</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-value">50+</div>
+          <div class="hero-stat-label">Open Roles</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">10+</div>
+          <div class="hero-stat-label">Cities</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">₹15L+</div>
+          <div class="hero-stat-label">Top Package</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════ COUNTDOWN STRIP ═══════════════════ -->
+  <div class="countdown-strip">
+    <div class="countdown-inner">
+      <span class="countdown-label-text">Applications Close In :</span>
+      <div class="countdown-timer" id="countdown-timer">
+        <div class="countdown-block">
+          <span class="countdown-value" id="countdown-days">00</span>
+          <span class="countdown-unit">Days</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-block">
+          <span class="countdown-value" id="countdown-hours">00</span>
+          <span class="countdown-unit">Hours</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-block">
+          <span class="countdown-value" id="countdown-minutes">00</span>
+          <span class="countdown-unit">Mins</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-block">
+          <span class="countdown-value" id="countdown-seconds">00</span>
+          <span class="countdown-unit">Secs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════ ABOUT SECTION ═══════════════════ -->
+  <section id="about" class="section noise-bg about-section">
+    <div class="container">
+      <div class="about-content reveal">
+        <h2 class="section-title">About The Event</h2>
+        <p>
+          Our Sales Hiring Event is an exclusive opportunity for ambitious professionals
+          and fresh graduates to connect with top industry leaders. Over the course of
+          this multi-city event, candidates will experience interactive workshops,
+          one-on-one mentorship sessions, and live interviews — giving you a direct path
+          to exciting sales roles. Whether you're a seasoned closer or just starting out,
+          this is your chance to accelerate your career.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════ WHO CAN APPLY ═══════════════════ -->
+  <section id="eligibility" class="section">
+    <div class="container">
+      <h2 class="section-title reveal">Who Can Apply?</h2>
+      <p class="section-subtitle reveal">
+        We're looking for driven individuals ready to make an impact. Check if you qualify below.
+      </p>
+
+      <div class="eligibility-grid reveal-stagger">
+        <!-- Card 1 -->
+        <div class="eligibility-card">
+          <div class="card-icon-circle">
+            <svg viewBox="0 0 24 24"><path d="M20 7h-4V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM10 4h4v3h-4V4zm10 16H4V9h16v11z"/></svg>
+          </div>
+          <h3 class="card-title">Sales Professionals</h3>
+          <p class="card-text">
+            Experienced B2B or B2C sales professionals with a proven track record
+            of meeting or exceeding targets. Minimum 1 year of relevant experience.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="eligibility-card">
+          <div class="card-icon-circle">
+            <svg viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+          </div>
+          <h3 class="card-title">Fresh Graduates</h3>
+          <p class="card-text">
+            Ambitious graduates from any discipline who are passionate about
+            building a career in sales. Strong communication skills are a must.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="eligibility-card">
+          <div class="card-icon-circle">
+            <svg viewBox="0 0 24 24"><path d="M12 6V2L8 6l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 9.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v4l4-4-4-4v4z"/></svg>
+          </div>
+          <h3 class="card-title">Career Changers</h3>
+          <p class="card-text">
+            Professionals from any field looking to pivot into a dynamic sales
+            career. We value diverse perspectives and transferable skills.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════ JOURNEY / TIMELINE ═══════════════════ -->
+  <section id="journey" class="section noise-bg">
+    <div class="container">
+      <div class="journey-grid">
+        <!-- Left Text -->
+        <div class="journey-text reveal-left">
+          <h2 class="section-title">Your Path To Joining Us</h2>
+          <p>
+            From the moment you apply, you'll experience a transparent and
+            supportive hiring process. At every stage, you'll have the
+            chance to showcase your skills, connect with our team, and
+            learn what makes our sales culture exceptional.
+          </p>
+        </div>
+
+        <!-- Right Timeline -->
+        <div class="timeline reveal-right">
+          <div class="timeline-line"></div>
+
+          <!-- Step 1 -->
+          <div class="timeline-step">
+            <div class="step-number">1</div>
+            <div class="step-connector"></div>
+            <div class="step-content">
+              <h3 class="step-title">Application</h3>
+              <p class="step-description">
+                Submit your profile and resume through our portal. Tell us why
+                you're passionate about sales and what drives you to succeed.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="timeline-step">
+            <div class="step-number">2</div>
+            <div class="step-connector"></div>
+            <div class="step-content">
+              <h3 class="step-title">Screening</h3>
+              <p class="step-description">
+                Our recruitment team reviews applications and conducts initial
+                phone screenings to understand your background and aspirations.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="timeline-step">
+            <div class="step-number">3</div>
+            <div class="step-connector"></div>
+            <div class="step-content">
+              <h3 class="step-title">Interview Day</h3>
+              <p class="step-description">
+                Join us for a live hiring event with panel interviews,
+                role-play exercises, and one-on-one sessions with team leaders.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="timeline-step">
+            <div class="step-number">4</div>
+            <div class="step-connector"></div>
+            <div class="step-content">
+              <h3 class="step-title">Offer & Onboarding</h3>
+              <p class="step-description">
+                Top performers receive offers within 48 hours. Our comprehensive
+                onboarding program gets you selling and winning from day one.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════ BENEFITS SECTION ═══════════════════ -->
+  <section id="benefits" class="section">
+    <div class="container">
+      <h2 class="section-title reveal">What's In It For You</h2>
+      <p class="section-subtitle reveal">
+        We don't just hire salespeople — we invest in them. Here's what you can expect.
+      </p>
+
+      <div class="benefits-grid reveal-stagger">
+        <!-- Benefit 1 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1H6.5c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.88-4.4z"/></svg>
+          </div>
+          <h3 class="benefit-title">Competitive Salary</h3>
+          <p class="benefit-text">
+            Industry-leading base pay plus uncapped commission structure.
+            Top performers earn ₹15L+ annually with bonuses.
+          </p>
+        </div>
+
+        <!-- Benefit 2 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+          </div>
+          <h3 class="benefit-title">Career Growth</h3>
+          <p class="benefit-text">
+            Clear promotion pathways from SDR to VP of Sales.
+            90% of our leadership was promoted from within.
+          </p>
+        </div>
+
+        <!-- Benefit 3 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+          </div>
+          <h3 class="benefit-title">Training & Development</h3>
+          <p class="benefit-text">
+            Comprehensive sales academy with certification programs,
+            expert workshops, and continuous skill development.
+          </p>
+        </div>
+
+        <!-- Benefit 4 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          </div>
+          <h3 class="benefit-title">Team Culture</h3>
+          <p class="benefit-text">
+            Collaborative, high-energy environment with team outings,
+            celebrations, and a supportive peer network.
+          </p>
+        </div>
+
+        <!-- Benefit 5 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          </div>
+          <h3 class="benefit-title">Health & Wellness</h3>
+          <p class="benefit-text">
+            Comprehensive health insurance, mental wellness programs,
+            gym memberships, and flexible time-off policy.
+          </p>
+        </div>
+
+        <!-- Benefit 6 -->
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          </div>
+          <h3 class="benefit-title">Performance Rewards</h3>
+          <p class="benefit-text">
+            Quarterly incentives, annual trips, recognition awards,
+            and fast-track promotions for top performers.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════ FAQ SECTION ═══════════════════ -->
+  <section id="faq" class="section noise-bg">
+    <div class="container">
+      <h2 class="section-title reveal">Frequently Asked Questions</h2>
+      <p class="section-subtitle reveal">
+        Got questions? We've got answers. If you need more info, reach out to us below.
+      </p>
+
+      <div class="faq-list reveal">
+        <!-- FAQ 1 -->
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Who is eligible to apply for this hiring event?</span>
+            <div class="faq-icon"></div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              The event is open to experienced sales professionals, fresh graduates from any
+              discipline, and career changers looking to enter the sales domain. Candidates
+              must be 18 years or older and authorized to work in India.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>What types of sales roles are available?</span>
+            <div class="faq-icon"></div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              We're hiring across multiple levels: Sales Development Representatives (SDR),
+              Account Executives, Enterprise Sales Managers, and Regional Sales Leads.
+              Roles span B2B SaaS, consumer products, and enterprise solutions.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>What does the interview process look like?</span>
+            <div class="faq-icon"></div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              After submitting your application, shortlisted candidates will receive a phone
+              screening. Those who pass will be invited to our Interview Day, which includes
+              panel discussions, role-play scenarios, and one-on-one meetings with hiring managers.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Is remote or hybrid work available?</span>
+            <div class="faq-icon"></div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Yes! We offer flexible work arrangements including fully remote, hybrid, and
+              in-office options depending on the role and location. Our team operates across
+              10+ cities with a remote-friendly culture.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>What compensation and benefits can I expect?</span>
+            <div class="faq-icon"></div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              We offer competitive base salaries with uncapped commissions. Top performers
+              earn ₹15L+ annually. Benefits include comprehensive health insurance, learning
+              stipends, gym memberships, annual retreats, and equity options for senior roles.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 6 -->
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Do I need prior sales experience to apply?</span>
+            <div class="faq-icon"></div>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Not necessarily! While experience is valued, we have dedicated entry-level
+              programs for fresh graduates. What we look for most is drive, communication
+              skills, and a growth mindset. Our training academy will equip you with
+              everything you need.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════ FOOTER ═══════════════════ -->
+  <footer id="contact" class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand -->
+        <div class="footer-brand">
+          <a href="#hero" class="nav-logo">
+            SALES<span class="logo-accent">HUB</span>
+          </a>
+          <p>
+            Connecting ambitious talent with exceptional sales opportunities.
+            Your career in sales starts here.
+          </p>
+          <div class="footer-social">
+            <a href="#" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+            </a>
+            <a href="#" aria-label="Twitter">
+              <svg viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg>
+            </a>
+            <a href="#" aria-label="Instagram">
+              <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+            </a>
+            <a href="mailto:hiring@saleshub.com" aria-label="Email">
+              <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-col">
+          <h4 class="footer-title">Quick Links</h4>
+          <div class="footer-links">
+            <a href="#about">About Event</a>
+            <a href="#eligibility">Eligibility</a>
+            <a href="#journey">Hiring Process</a>
+            <a href="#benefits">Benefits</a>
+          </div>
+        </div>
+
+        <!-- Resources -->
+        <div class="footer-col">
+          <h4 class="footer-title">Resources</h4>
+          <div class="footer-links">
+            <a href="#">Careers Page</a>
+            <a href="#">Company Blog</a>
+            <a href="#">Glassdoor Reviews</a>
+            <a href="#">Interview Tips</a>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="footer-col">
+          <h4 class="footer-title">Contact Us</h4>
+          <div class="footer-links">
+            <a href="mailto:hiring@saleshub.com">hiring@saleshub.com</a>
+            <a href="tel:+919876543210">+91 98765 43210</a>
+            <a href="#">Mumbai, India</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 SalesHub. All rights reserved. Built with passion for sales excellence.</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+
+</html>
