@@ -292,15 +292,15 @@ img {
 }
 
 .nav-logo {
-  font-family: var(--font-heading);
-  font-size: 1.6rem;
-  color: var(--color-text-white);
-  letter-spacing: 2px;
-  text-transform: uppercase;
   transition: opacity var(--transition-slow);
   display: flex;
   align-items: center;
-  gap: 10px;
+}
+
+.logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
 }
 
 .nav-logo .logo-accent {
