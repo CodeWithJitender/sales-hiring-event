@@ -1,6 +1,8 @@
 /* ===================================================================
    INDIA'S FIRST GLOBAL SALES TALENT HUNT — MAIN JAVASCRIPT
-   Handles: GSAP ScrollTrigger animations, split text, parallax,
+   Handles: Lenis smooth scroll, GSAP ScrollTrigger animations,
+            split text, parallax, pin animations, horizontal scroll,
+            word-by-word reveal, magnetic buttons, cursor glow,
             countdown, FAQ, navbar, EmailJS form submission
    =================================================================== */
 
@@ -8,6 +10,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Register GSAP Plugins ──────────────────────────────────────────
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+  // ══════════════════════════════════════════════════════════════════
+  //  LENIS SMOOTH SCROLL
+  // ══════════════════════════════════════════════════════════════════
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation: 'vertical',
+    smoothWheel: true,
+    touchMultiplier: 2,
+  });
+
+  // Sync Lenis with GSAP's ticker for perfect animation timing
+  lenis.on('scroll', ScrollTrigger.update);
+
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+  gsap.ticker.lagSmoothing(0);
+
 
   // ── EmailJS Initialization ─────────────────────────────────────────
   emailjs.init('QpkBmnT4LJ4PGyWTX');
@@ -86,10 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ══════════════════════════════════════════════════════════════════
-  //  GSAP SCROLL TRIGGER ANIMATIONS
+  //  SPLIT TEXT ANIMATION
   // ══════════════════════════════════════════════════════════════════
 
-  // ── Split Text Utility ─────────────────────────────────────────────
   function splitTextIntoChars(element) {
     const children = Array.from(element.childNodes);
     element.innerHTML = '';
@@ -114,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
           element.appendChild(wordSpan);
         });
       } else if (node.nodeType === Node.ELEMENT_NODE) {
-        // Preserve spans like .highlight
         const clone = node.cloneNode(false);
         const text = node.textContent;
         const words = text.split(/(\s+)/);
@@ -141,12 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
     return element.querySelectorAll('.char');
   }
 
-  // Split all headings with data-split attribute
+  // Split headings
   const splitElements = document.querySelectorAll('[data-split]');
   splitElements.forEach(el => {
     const chars = splitTextIntoChars(el);
 
-    // Hero title — animate on load
     if (el.classList.contains('hero-title')) {
       gsap.fromTo(chars,
         { opacity: 0, y: 60, rotateX: -40 },
@@ -159,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       );
     } else {
-      // Section titles — animate on scroll
       gsap.fromTo(chars,
         { opacity: 0, y: 60, rotateX: -40 },
         {
@@ -177,7 +195,50 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ── Hero Entrance Timeline ─────────────────────────────────────────
+
+  // ══════════════════════════════════════════════════════════════════
+  //  WORD-BY-WORD SCRUB REVEAL (Bartosz Kolenda style)
+  // ══════════════════════════════════════════════════════════════════
+
+  document.querySelectorAll('[data-word-reveal]').forEach(el => {
+    const text = el.textContent;
+    const words = text.split(/\s+/).filter(w => w.length > 0);
+    el.innerHTML = '';
+
+    words.forEach((word, i) => {
+      const span = document.createElement('span');
+      span.className = 'word-reveal';
+      span.textContent = word;
+      el.appendChild(span);
+      if (i < words.length - 1) {
+        el.appendChild(document.createTextNode(' '));
+      }
+    });
+
+    const wordSpans = el.querySelectorAll('.word-reveal');
+
+    // Scrub-based: each word fades in as you scroll through the section
+    gsap.fromTo(wordSpans,
+      { opacity: 0.15 },
+      {
+        opacity: 1,
+        stagger: 0.05,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 80%',
+          end: 'bottom 40%',
+          scrub: 1,
+        }
+      }
+    );
+  });
+
+
+  // ══════════════════════════════════════════════════════════════════
+  //  HERO ENTRANCE TIMELINE
+  // ══════════════════════════════════════════════════════════════════
+
   const heroTL = gsap.timeline({ delay: 0.2 });
 
   heroTL
@@ -207,7 +268,35 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
 
-  // ── Parallax on Scroll (Hero) ──────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════
+  //  HERO CURSOR GLOW (Desktop only)
+  // ══════════════════════════════════════════════════════════════════
+
+  if (window.innerWidth > 768) {
+    const heroSection = document.querySelector('.hero-section');
+    if (heroSection) {
+      const glow = document.createElement('div');
+      glow.className = 'hero-cursor-glow';
+      heroSection.appendChild(glow);
+
+      heroSection.addEventListener('mousemove', (e) => {
+        const rect = heroSection.getBoundingClientRect();
+        gsap.to(glow, {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          duration: 0.6,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      });
+    }
+  }
+
+
+  // ══════════════════════════════════════════════════════════════════
+  //  PARALLAX EFFECTS
+  // ══════════════════════════════════════════════════════════════════
+
   const heroBgImage = document.querySelector('.hero-bg-image');
   const heroShapes = document.querySelectorAll('.hero-shape');
 
@@ -255,10 +344,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
+  // Subtle parallax on noise-bg sections
+  document.querySelectorAll('.noise-bg').forEach(section => {
+    gsap.to(section, {
+      backgroundPositionY: '30%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 2,
+      }
+    });
+  });
 
-  // ── About Section ──────────────────────────────────────────────────
-  gsap.fromTo('#about .about-content p',
-    { opacity: 0, y: 40 },
+
+  // ══════════════════════════════════════════════════════════════════
+  //  ABOUT SECTION — SCRUB REVEAL
+  // ══════════════════════════════════════════════════════════════════
+
+  gsap.fromTo('#about .about-content',
+    { opacity: 0, y: 60 },
     {
       opacity: 1, y: 0, duration: 1,
       ease: 'power3.out',
@@ -271,35 +377,41 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
 
-  // ── Eligibility Cards — 3D Stagger ─────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════
+  //  ELIGIBILITY CARDS — SCRUB SCALE + 3D REVEAL
+  // ══════════════════════════════════════════════════════════════════
+
   const eligCards = gsap.utils.toArray('.eligibility-card');
   eligCards.forEach((card, i) => {
     gsap.fromTo(card,
       {
         opacity: 0,
         y: 80,
-        rotateX: -15,
-        scale: 0.9,
+        scale: 0.85,
+        rotateX: -10,
       },
       {
         opacity: 1,
         y: 0,
-        rotateX: 0,
         scale: 1,
+        rotateX: 0,
         duration: 0.8,
-        delay: i * 0.15,
         ease: 'power3.out',
         scrollTrigger: {
           trigger: card,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
+          start: 'top 90%',
+          end: 'top 50%',
+          scrub: 1,
         }
       }
     );
   });
 
 
-  // ── Timeline Section — Draw Line + Stagger Steps ───────────────────
+  // ══════════════════════════════════════════════════════════════════
+  //  TIMELINE SECTION — DRAW LINE + STAGGER STEPS
+  // ══════════════════════════════════════════════════════════════════
+
   const timelineLine = document.querySelector('.timeline-line');
   const timelineSteps = gsap.utils.toArray('.timeline-step');
 
@@ -344,36 +456,86 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  // ── Benefits Cards — Scroll-Triggered Stagger ──────────────────────
-  const benefitCards = gsap.utils.toArray('.benefit-card');
-  benefitCards.forEach((card, i) => {
-    // Alternate animation: even from left, odd from right
-    const fromX = i % 2 === 0 ? -60 : 60;
+  // ══════════════════════════════════════════════════════════════════
+  //  BENEFITS — HORIZONTAL SCROLL PIN (Desktop)
+  // ══════════════════════════════════════════════════════════════════
 
-    gsap.fromTo(card,
-      {
-        opacity: 0,
-        x: fromX,
-        y: 40,
-        rotateY: i % 2 === 0 ? 10 : -10,
-      },
-      {
-        opacity: 1,
-        x: 0,
-        y: 0,
-        rotateY: 0,
-        duration: 0.7,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        }
+  const benefitsWrap = document.querySelector('.benefits-horizontal-wrap');
+  const benefitsGrid = document.querySelector('.benefits-pin-section .benefits-grid');
+
+  if (benefitsWrap && benefitsGrid && window.innerWidth > 768) {
+    // Calculate scroll distance
+    const getScrollAmount = () => {
+      return -(benefitsGrid.scrollWidth - window.innerWidth + 100);
+    };
+
+    gsap.to(benefitsGrid, {
+      x: getScrollAmount,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.benefits-pin-section',
+        start: 'top 15%',
+        end: () => `+=${Math.abs(getScrollAmount())}`,
+        pin: true,
+        scrub: 1.2,
+        invalidateOnRefresh: true,
+        anticipatePin: 1,
       }
-    );
-  });
+    });
 
-  // Card tilt on mouse (desktop)
+    // Individual card parallax within horizontal scroll
+    const benefitCards = gsap.utils.toArray('.benefit-card');
+    benefitCards.forEach((card, i) => {
+      gsap.fromTo(card,
+        { opacity: 0, y: 50, scale: 0.9 },
+        {
+          opacity: 1, y: 0, scale: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: card,
+            start: 'left 80%',
+            containerAnimation: gsap.getById?.('benefitsHoriz'),
+            toggleActions: 'play none none none',
+          }
+        }
+      );
+    });
+  } else {
+    // Mobile: standard stagger reveal
+    const benefitCards = gsap.utils.toArray('.benefit-card');
+    benefitCards.forEach((card, i) => {
+      const fromX = i % 2 === 0 ? -60 : 60;
+
+      gsap.fromTo(card,
+        {
+          opacity: 0,
+          x: fromX,
+          y: 40,
+          rotateY: i % 2 === 0 ? 10 : -10,
+        },
+        {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          rotateY: 0,
+          duration: 0.7,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          }
+        }
+      );
+    });
+  }
+
+
+  // ══════════════════════════════════════════════════════════════════
+  //  3D CARD TILT ON MOUSE (Desktop)
+  // ══════════════════════════════════════════════════════════════════
+
   if (window.innerWidth > 768) {
     const tiltCards = document.querySelectorAll('.benefit-card, .eligibility-card');
     tiltCards.forEach(card => {
@@ -413,16 +575,54 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // ── FAQ Items — Stagger Reveal ─────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════
+  //  MAGNETIC BUTTONS (Desktop — Peachweb style)
+  // ══════════════════════════════════════════════════════════════════
+
+  if (window.innerWidth > 768) {
+    const magneticBtns = document.querySelectorAll('.btn-primary, .btn-outline, .btn-cta');
+
+    magneticBtns.forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+
+        gsap.to(btn, {
+          x: x * 0.3,
+          y: y * 0.3,
+          duration: 0.3,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        gsap.to(btn, {
+          x: 0,
+          y: 0,
+          duration: 0.5,
+          ease: 'elastic.out(1, 0.3)',
+          overwrite: 'auto',
+        });
+      });
+    });
+  }
+
+
+  // ══════════════════════════════════════════════════════════════════
+  //  FAQ ITEMS — ALTERNATING SLIDE REVEAL
+  // ══════════════════════════════════════════════════════════════════
+
   const faqItems = gsap.utils.toArray('.faq-item');
   faqItems.forEach((item, i) => {
+    const fromX = i % 2 === 0 ? -60 : 60;
     gsap.fromTo(item,
-      { opacity: 0, x: -40, y: 20 },
+      { opacity: 0, x: fromX, y: 20 },
       {
         opacity: 1, x: 0, y: 0,
-        duration: 0.5,
-        delay: i * 0.08,
-        ease: 'power2.out',
+        duration: 0.6,
+        ease: 'power3.out',
         scrollTrigger: {
           trigger: item,
           start: 'top 90%',
@@ -433,7 +633,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  // ── Section Subtitles — Fade Up ────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════
+  //  SECTION SUBTITLES — FADE UP
+  // ══════════════════════════════════════════════════════════════════
+
   gsap.utils.toArray('.section-subtitle').forEach(sub => {
     gsap.fromTo(sub,
       { opacity: 0, y: 30 },
@@ -450,7 +653,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  // ── Countdown Strip — Scale In ─────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════
+  //  COUNTDOWN STRIP — PIN + SCALE IN
+  // ══════════════════════════════════════════════════════════════════
+
   gsap.fromTo('.countdown-strip',
     { opacity: 0, scaleY: 0 },
     {
@@ -466,7 +672,10 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
 
-  // ── Footer Reveal ──────────────────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════
+  //  FOOTER REVEAL
+  // ══════════════════════════════════════════════════════════════════
+
   gsap.fromTo('.footer-content',
     { opacity: 0, y: 50 },
     {
@@ -481,7 +690,10 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
 
-  // ── Counter Animation for Hero Stats ───────────────────────────────
+  // ══════════════════════════════════════════════════════════════════
+  //  COUNTER ANIMATION FOR HERO STATS
+  // ══════════════════════════════════════════════════════════════════
+
   const statValues = document.querySelectorAll('.hero-stat-value');
   let statsAnimated = false;
 
@@ -520,7 +732,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  // ── FAQ Accordion ──────────────────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════
+  //  FAQ ACCORDION
+  // ══════════════════════════════════════════════════════════════════
+
   const faqItemsDOM = document.querySelectorAll('.faq-item');
 
   faqItemsDOM.forEach(item => {
@@ -542,10 +757,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  // ── Smooth Scroll for Nav Links ────────────────────────────────────
-  const navLinks = document.querySelectorAll('a[href^="#"]');
+  // ══════════════════════════════════════════════════════════════════
+  //  SMOOTH SCROLL FOR NAV LINKS (via Lenis)
+  // ══════════════════════════════════════════════════════════════════
 
-  navLinks.forEach(link => {
+  const navLinksAll = document.querySelectorAll('a[href^="#"]');
+
+  navLinksAll.forEach(link => {
     link.addEventListener('click', (e) => {
       const targetId = link.getAttribute('href');
       if (targetId === '#') return;
@@ -553,17 +771,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetEl = document.querySelector(targetId);
       if (targetEl) {
         e.preventDefault();
-        gsap.to(window, {
-          scrollTo: { y: targetEl, offsetY: navbar.offsetHeight },
-          duration: 1,
-          ease: 'power3.inOut',
+        lenis.scrollTo(targetEl, {
+          offset: -navbar.offsetHeight,
+          duration: 1.5,
         });
       }
     });
   });
 
 
-  // ── Active Nav Link Highlighting ───────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════
+  //  ACTIVE NAV LINK HIGHLIGHTING
+  // ══════════════════════════════════════════════════════════════════
+
   const sections = document.querySelectorAll('section[id]');
   const desktopNavLinks = document.querySelectorAll('.nav-links a');
 
@@ -585,6 +805,28 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+
+  // ══════════════════════════════════════════════════════════════════
+  //  SECTION TITLE UNDERLINE SCRUB
+  // ══════════════════════════════════════════════════════════════════
+
+  document.querySelectorAll('.section-title').forEach(title => {
+    const after = title;
+    gsap.fromTo(after,
+      { '--underline-width': '0px' },
+      {
+        '--underline-width': '120px',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: title,
+          start: 'top 85%',
+          end: 'top 50%',
+          scrub: 1,
+        }
+      }
+    );
+  });
 
 
   // ══════════════════════════════════════════════════════════════════

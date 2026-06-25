@@ -29,6 +29,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
 
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -180,7 +183,7 @@
     <div class="container">
       <div class="about-content reveal">
         <h2 class="section-title" data-split>About The Talent Hunt</h2>
-        <p>
+        <p data-word-reveal>
           India's First Global Sales Talent Hunt is a groundbreaking initiative designed
           to identify, nurture, and launch the next generation of world-class sales
           professionals. This multi-city talent hunt brings together ambitious candidates
@@ -320,14 +323,15 @@
 
 
   <!-- ═══════════════════ BENEFITS SECTION ═══════════════════ -->
-  <section id="benefits" class="section">
+  <section id="benefits" class="section benefits-pin-section">
     <div class="container">
       <h2 class="section-title reveal" data-split>What's In It For You</h2>
       <p class="section-subtitle reveal">
         We don't just hire salespeople — we invest in them. Here's what you can expect.
       </p>
 
-      <div class="benefits-grid reveal-stagger">
+      <div class="benefits-horizontal-wrap">
+      <div class="benefits-grid">
         <!-- Benefit 1 -->
         <div class="benefit-card">
           <div class="benefit-icon">
@@ -399,6 +403,7 @@
             and fast-track promotions for top performers.
           </p>
         </div>
+      </div>
       </div>
     </div>
   </section>
