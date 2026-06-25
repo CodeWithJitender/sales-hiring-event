@@ -3,7 +3,8 @@
    Handles: Lenis smooth scroll, GSAP ScrollTrigger animations,
             split text, parallax, pin animations, horizontal scroll,
             word-by-word reveal, magnetic buttons, cursor glow,
-            countdown, FAQ, navbar, EmailJS form submission
+            countdown, FAQ, navbar, video modal, floating CTA,
+            schedule tabs
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -18,8 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     orientation: 'vertical',
+    gestureOrientation: 'vertical',
     smoothWheel: true,
-    touchMultiplier: 2,
+    wheelMultiplier: 1.0,
+    touchMultiplier: 1.5,
   });
 
   // Sync Lenis with GSAP's ticker for perfect animation timing
@@ -31,30 +34,74 @@ document.addEventListener('DOMContentLoaded', () => {
   gsap.ticker.lagSmoothing(0);
 
 
-  // ── EmailJS Initialization ─────────────────────────────────────────
-  emailjs.init('QpkBmnT4LJ4PGyWTX');
+  // ══════════════════════════════════════════════════════════════════
+  //  GLOBAL INTERACTIVE CUSTOM CURSOR (Bartosz Kolenda & Peachweb style)
+  // ══════════════════════════════════════════════════════════════════
+  if (window.innerWidth > 1024) {
+    const cursorDot = document.getElementById('custom-cursor-dot');
+    const cursorFollower = document.getElementById('custom-cursor-follower');
 
-  // ── Phone Input: Numbers Only ──────────────────────────────────────
-  const phoneInput = document.getElementById('form-phone');
-  if (phoneInput) {
-    phoneInput.addEventListener('input', () => {
-      phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '');
-    });
-    phoneInput.addEventListener('keydown', (e) => {
-      const allowed = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
-        'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
-      if (allowed.includes(e.key)) return;
-      if ((e.ctrlKey || e.metaKey) && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
-      if (!/^[0-9]$/.test(e.key)) {
-        e.preventDefault();
-      }
-    });
-    phoneInput.addEventListener('paste', (e) => {
-      e.preventDefault();
-      const pasted = (e.clipboardData || window.clipboardData).getData('text');
-      phoneInput.value = pasted.replace(/[^0-9]/g, '').slice(0, 10);
-    });
+    if (cursorDot && cursorFollower) {
+      // Center the elements using GSAP percentage offsets (keeps elements centered as they resize)
+      gsap.set(cursorDot, { xPercent: -50, yPercent: -50 });
+      gsap.set(cursorFollower, { xPercent: -50, yPercent: -50 });
+
+      // Create quickTo setter functions for performance
+      const xDotTo = gsap.quickTo(cursorDot, "x", { duration: 0.08, ease: "power3.out" });
+      const yDotTo = gsap.quickTo(cursorDot, "y", { duration: 0.08, ease: "power3.out" });
+
+      const xFollowerTo = gsap.quickTo(cursorFollower, "x", { duration: 0.3, ease: "power3.out" });
+      const yFollowerTo = gsap.quickTo(cursorFollower, "y", { duration: 0.3, ease: "power3.out" });
+
+      window.addEventListener('mousemove', (e) => {
+        xDotTo(e.clientX);
+        yDotTo(e.clientY);
+        xFollowerTo(e.clientX);
+        yFollowerTo(e.clientY);
+      }, { passive: true });
+
+      // Click reactions
+      window.addEventListener('mousedown', () => {
+        cursorFollower.classList.add('clicking');
+      });
+      window.addEventListener('mouseup', () => {
+        cursorFollower.classList.remove('clicking');
+      });
+
+      // Hover trigger hooks
+      const hoverSelector = 'a, button, .btn-primary, .btn-outline, .btn-cta, .faq-question, .footer-social-center a';
+      document.body.addEventListener('mouseenter', (e) => {
+        if (e.target.matches && e.target.matches(hoverSelector)) {
+          cursorFollower.classList.add('hovering');
+          gsap.to(cursorDot, { scale: 1.5, backgroundColor: '#0350E3', duration: 0.2 });
+        }
+      }, true);
+
+      document.body.addEventListener('mouseleave', (e) => {
+        if (e.target.matches && e.target.matches(hoverSelector)) {
+          cursorFollower.classList.remove('hovering');
+          gsap.to(cursorDot, { scale: 1, backgroundColor: 'var(--color-cta)', duration: 0.2 });
+        }
+      }, true);
+
+      // Card hover states
+      const cardSelector = '.eligibility-card, .benefit-card';
+      document.body.addEventListener('mouseenter', (e) => {
+        if (e.target.matches && e.target.matches(cardSelector)) {
+          cursorFollower.classList.add('card-hovering');
+        }
+      }, true);
+
+      document.body.addEventListener('mouseleave', (e) => {
+        if (e.target.matches && e.target.matches(cardSelector)) {
+          cursorFollower.classList.remove('card-hovering');
+        }
+      }, true);
+    }
   }
+
+
+
 
   // ── Navbar Scroll Effect ───────────────────────────────────────────
   const navbar = document.getElementById('navbar');
@@ -71,9 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ── Countdown Timer ────────────────────────────────────────────────
-  const targetDate = new Date();
-  targetDate.setDate(targetDate.getDate() + 30);
-  targetDate.setHours(23, 59, 59, 0);
+  const targetDate = new Date('2026-08-08T00:00:00');
 
   const daysEl = document.getElementById('countdown-days');
   const hoursEl = document.getElementById('countdown-hours');
@@ -239,33 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
   //  HERO ENTRANCE TIMELINE
   // ══════════════════════════════════════════════════════════════════
 
-  const heroTL = gsap.timeline({ delay: 0.2 });
-
-  heroTL
-    .fromTo('.hero-tag',
-      { opacity: 0, y: 30, scale: 0.9 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power3.out' }
-    )
-    .fromTo('.hero-subtitle',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
-      '-=0.3'
-    )
-    .fromTo('.hero-cta',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
-      '-=0.2'
-    )
-    .fromTo('.hero-stats',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
-      '-=0.2'
-    )
-    .fromTo('.hero-form-wrapper',
-      { opacity: 0, x: 60, rotateY: -8 },
-      { opacity: 1, x: 0, rotateY: 0, duration: 0.8, ease: 'power3.out' },
-      '-=0.5'
-    );
+  // Hero content — no entrance animation (show immediately)
 
 
   // ══════════════════════════════════════════════════════════════════
@@ -360,57 +379,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ══════════════════════════════════════════════════════════════════
-  //  ABOUT SECTION — SCRUB REVEAL
+  //  MOVEMENT SECTION — SCRUB REVEAL
   // ══════════════════════════════════════════════════════════════════
 
-  gsap.fromTo('#about .about-content',
+  gsap.fromTo('#movement .movement-content',
     { opacity: 0, y: 60 },
     {
-      opacity: 1, y: 0, duration: 1,
+      opacity: 1, y: 0,
       ease: 'power3.out',
       scrollTrigger: {
-        trigger: '#about',
-        start: 'top 70%',
-        toggleActions: 'play none none none',
+        trigger: '#movement',
+        start: 'top 85%',
+        end: 'top 55%',
+        scrub: 1,
       }
     }
   );
 
 
   // ══════════════════════════════════════════════════════════════════
-  //  ELIGIBILITY CARDS — SCRUB SCALE + 3D REVEAL
+  //  ELIGIBILITY CARDS — STAGGERED 3D ENTRANCE SCRUB (Peachweb style)
   // ══════════════════════════════════════════════════════════════════
 
-  const eligCards = gsap.utils.toArray('.eligibility-card');
-  eligCards.forEach((card, i) => {
-    gsap.fromTo(card,
-      {
-        opacity: 0,
-        y: 80,
-        scale: 0.85,
-        rotateX: -10,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        rotateX: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 90%',
-          end: 'top 50%',
-          scrub: 1,
-        }
+  gsap.fromTo('.eligibility-card',
+    {
+      opacity: 0,
+      y: 60,
+      rotateX: -15,
+      scale: 0.9,
+    },
+    {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      scale: 1,
+      stagger: 0.1,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.eligibility-grid',
+        start: 'top 85%',
+        end: 'bottom 75%',
+        scrub: 1,
       }
-    );
-  });
+    }
+  );
 
 
   // ══════════════════════════════════════════════════════════════════
-  //  TIMELINE SECTION — DRAW LINE + STAGGER STEPS
+  //  TIMELINE SECTION — PINNING + DRAW LINE + STAGGER STEPS SCRUB
   // ══════════════════════════════════════════════════════════════════
+
+  // Pin the left heading while the 6 timeline cards scroll on the right
+  const journeySection = document.querySelector('#journey');
+  const journeyText = document.querySelector('.journey-text');
+  const timelineEl = document.querySelector('.timeline');
+
+  if (journeySection && journeyText && timelineEl && window.innerWidth > 1024) {
+    ScrollTrigger.create({
+      trigger: journeySection,
+      start: 'top 80px',
+      end: () => {
+        // Pin until the bottom of the timeline section is reached
+        const timelineHeight = timelineEl.offsetHeight;
+        const textHeight = journeyText.offsetHeight;
+        const diff = timelineHeight - textHeight;
+        return `+=${Math.max(diff, 200)}`;
+      },
+      pin: journeyText,
+      pinSpacing: false,
+    });
+  }
 
   const timelineLine = document.querySelector('.timeline-line');
   const timelineSteps = gsap.utils.toArray('.timeline-step');
@@ -438,20 +476,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const stepTL = gsap.timeline({
       scrollTrigger: {
         trigger: step,
-        start: 'top 80%',
-        toggleActions: 'play none none none',
+        start: 'top 90%',
+        end: 'top 70%',
+        scrub: 1.2,
       }
     });
 
     stepTL
       .fromTo(stepNumber,
         { opacity: 0, scale: 0, rotate: -180 },
-        { opacity: 1, scale: 1, rotate: 0, duration: 0.6, ease: 'back.out(2)' }
+        { opacity: 1, scale: 1, rotate: 0 }
       )
       .fromTo(stepContent,
         { opacity: 0, x: 60, rotateY: -10 },
-        { opacity: 1, x: 0, rotateY: 0, duration: 0.7, ease: 'power3.out' },
-        '-=0.3'
+        { opacity: 1, x: 0, rotateY: 0 },
+        '-=0.2'
       );
   });
 
@@ -469,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return -(benefitsGrid.scrollWidth - window.innerWidth + 100);
     };
 
-    gsap.to(benefitsGrid, {
+    const benefitsTween = gsap.to(benefitsGrid, {
       x: getScrollAmount,
       ease: 'none',
       scrollTrigger: {
@@ -495,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
           scrollTrigger: {
             trigger: card,
             start: 'left 80%',
-            containerAnimation: gsap.getById?.('benefitsHoriz'),
+            containerAnimation: benefitsTween,
             toggleActions: 'play none none none',
           }
         }
@@ -611,7 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ══════════════════════════════════════════════════════════════════
-  //  FAQ ITEMS — ALTERNATING SLIDE REVEAL
+  //  FAQ ITEMS — ALTERNATING SLIDE REVEAL SCRUB
   // ══════════════════════════════════════════════════════════════════
 
   const faqItems = gsap.utils.toArray('.faq-item');
@@ -621,12 +660,12 @@ document.addEventListener('DOMContentLoaded', () => {
       { opacity: 0, x: fromX, y: 20 },
       {
         opacity: 1, x: 0, y: 0,
-        duration: 0.6,
-        ease: 'power3.out',
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: item,
-          start: 'top 90%',
-          toggleActions: 'play none none none',
+          start: 'top 95%',
+          end: 'top 75%',
+          scrub: 1,
         }
       }
     );
@@ -634,19 +673,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ══════════════════════════════════════════════════════════════════
-  //  SECTION SUBTITLES — FADE UP
+  //  SECTION SUBTITLES — FADE UP SCRUB
   // ══════════════════════════════════════════════════════════════════
 
   gsap.utils.toArray('.section-subtitle').forEach(sub => {
     gsap.fromTo(sub,
       { opacity: 0, y: 30 },
       {
-        opacity: 1, y: 0, duration: 0.7,
-        ease: 'power3.out',
+        opacity: 1, y: 0,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: sub,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
+          start: 'top 90%',
+          end: 'top 70%',
+          scrub: 1,
         }
       }
     );
@@ -673,18 +713,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ══════════════════════════════════════════════════════════════════
-  //  FOOTER REVEAL
+  //  FOOTER REVEAL SCRUB
   // ══════════════════════════════════════════════════════════════════
 
   gsap.fromTo('.footer-content',
     { opacity: 0, y: 50 },
     {
-      opacity: 1, y: 0, duration: 0.8,
+      opacity: 1, y: 0,
       ease: 'power3.out',
       scrollTrigger: {
         trigger: '.footer',
-        start: 'top 85%',
-        toggleActions: 'play none none none',
+        start: 'top 95%',
+        end: 'bottom bottom',
+        scrub: 1,
       }
     }
   );
@@ -733,25 +774,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ══════════════════════════════════════════════════════════════════
-  //  FAQ ACCORDION
+  //  FAQ ACCORDION (GSAP Height Transition)
   // ══════════════════════════════════════════════════════════════════
 
   const faqItemsDOM = document.querySelectorAll('.faq-item');
 
   faqItemsDOM.forEach(item => {
     const question = item.querySelector('.faq-question');
+    const answer = item.querySelector('.faq-answer');
 
     question.addEventListener('click', () => {
       const isActive = item.classList.contains('active');
 
+      // Close other items
       faqItemsDOM.forEach(otherItem => {
-        otherItem.classList.remove('active');
-        otherItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+        if (otherItem !== item && otherItem.classList.contains('active')) {
+          otherItem.classList.remove('active');
+          otherItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          gsap.to(otherItem.querySelector('.faq-answer'), { height: 0, duration: 0.4, ease: 'power2.out' });
+        }
       });
 
-      if (!isActive) {
+      // Toggle current item
+      if (isActive) {
+        item.classList.remove('active');
+        question.setAttribute('aria-expanded', 'false');
+        gsap.to(answer, { height: 0, duration: 0.4, ease: 'power2.out' });
+      } else {
         item.classList.add('active');
         question.setAttribute('aria-expanded', 'true');
+        gsap.to(answer, { height: 'auto', duration: 0.5, ease: 'power2.out' });
       }
     });
   });
@@ -830,125 +882,219 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ══════════════════════════════════════════════════════════════════
-  //  FORM VALIDATION & SUBMISSION
+  //  VIDEO MODAL
   // ══════════════════════════════════════════════════════════════════
 
-  function showFieldError(fieldId, message) {
-    const field = document.getElementById(fieldId);
-    if (!field) return;
-    clearFieldError(fieldId);
-    field.style.borderColor = '#ff4444';
-    const errorEl = document.createElement('span');
-    errorEl.className = 'field-error';
-    errorEl.textContent = message;
-    errorEl.style.cssText = 'color:#ff6b6b;font-size:0.78rem;margin-top:4px;display:block;';
-    field.parentElement.appendChild(errorEl);
+  function openVideoModal() {
+    document.getElementById('video-modal').classList.add('active');
+    document.body.style.overflow = 'hidden';
   }
 
-  function clearFieldError(fieldId) {
-    const field = document.getElementById(fieldId);
-    if (!field) return;
-    field.style.borderColor = '';
-    const existing = field.parentElement.querySelector('.field-error');
-    if (existing) existing.remove();
+  function closeVideoModal() {
+    document.getElementById('video-modal').classList.remove('active');
+    document.body.style.overflow = '';
   }
 
-  function sanitize(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML.trim();
-  }
+  // Make functions globally accessible
+  window.openVideoModal = openVideoModal;
+  window.closeVideoModal = closeVideoModal;
 
-  function validateForm() {
-    let isValid = true;
-
-    const nameVal = document.getElementById('form-name').value.trim();
-    clearFieldError('form-name');
-    if (nameVal.length < 2) {
-      showFieldError('form-name', 'Name must be at least 2 characters.');
-      isValid = false;
-    } else if (!/^[a-zA-Z\s.\-']+$/.test(nameVal)) {
-      showFieldError('form-name', 'Name can only contain letters, spaces, dots and hyphens.');
-      isValid = false;
-    }
-
-    const emailVal = document.getElementById('form-email').value.trim();
-    clearFieldError('form-email');
-    const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(emailVal)) {
-      showFieldError('form-email', 'Please enter a valid email address.');
-      isValid = false;
-    }
-
-    const phoneVal = document.getElementById('form-phone').value.trim();
-    clearFieldError('form-phone');
-    const phoneClean = phoneVal.replace(/[\s\-\+]/g, '');
-    const phoneRegex = /^(91)?[6-9]\d{9}$/;
-    if (!phoneRegex.test(phoneClean)) {
-      showFieldError('form-phone', 'Please enter a valid 10-digit Indian mobile number.');
-      isValid = false;
-    }
-
-    const messageVal = document.getElementById('form-message').value.trim();
-    clearFieldError('form-message');
-    if (messageVal.length > 1000) {
-      showFieldError('form-message', 'Message must be under 1000 characters.');
-      isValid = false;
-    }
-
-    return isValid;
-  }
-
-  // Real-time validation on blur
-  ['form-name', 'form-email', 'form-phone', 'form-message'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.addEventListener('blur', () => validateForm());
-      el.addEventListener('input', () => clearFieldError(id));
-    }
+  // Close modal on overlay click
+  document.getElementById('video-modal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeVideoModal();
   });
 
-  // ── EmailJS Form Submission ────────────────────────────────────────
-  const contactForm = document.getElementById('contact-form');
-  const submitBtn = document.getElementById('form-submit-btn');
+  // Close modal on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeVideoModal();
+  });
 
-  if (contactForm && submitBtn) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
 
-      if (!validateForm()) return;
+  // ══════════════════════════════════════════════════════════════════
+  //  FLOATING CTA BAR
+  // ══════════════════════════════════════════════════════════════════
 
-      const btnText = submitBtn.querySelector('.btn-text');
-      const btnLoader = submitBtn.querySelector('.btn-loader');
-      btnText.style.display = 'none';
-      btnLoader.style.display = 'inline-flex';
-      submitBtn.disabled = true;
-      submitBtn.style.opacity = '0.7';
-
-      const templateParams = {
-        name: sanitize(document.getElementById('form-name').value.trim()),
-        email: sanitize(document.getElementById('form-email').value.trim()),
-        phone: sanitize(document.getElementById('form-phone').value.trim()),
-        message: sanitize(document.getElementById('form-message').value.trim()),
-        time: new Date().toLocaleString('en-IN', {
-          dateStyle: 'full',
-          timeStyle: 'short',
-        }),
-      };
-
-      emailjs.send('service_5ukbpwr', 'template_s33irls', templateParams)
-        .then(() => {
-          window.location.href = 'thankyou.html';
-        })
-        .catch((error) => {
-          console.error('EmailJS Error:', error);
-          alert('Something went wrong. Please try again or contact us directly.');
-          btnText.style.display = '';
-          btnLoader.style.display = 'none';
-          submitBtn.disabled = false;
-          submitBtn.style.opacity = '1';
-        });
+  const floatingCta = document.getElementById('floating-cta');
+  if (floatingCta) {
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 600) {
+        floatingCta.classList.add('visible');
+      } else {
+        floatingCta.classList.remove('visible');
+      }
     });
   }
+
+
+  // ══════════════════════════════════════════════════════════════════
+  //  SCHEDULE TABS
+  // ══════════════════════════════════════════════════════════════════
+
+  const scheduleTabs = document.querySelectorAll('.schedule-tab-btn');
+  const scheduleDays = document.querySelectorAll('.schedule-day');
+  scheduleTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      scheduleTabs.forEach(t => t.classList.remove('active'));
+      scheduleDays.forEach(d => d.classList.remove('active'));
+      tab.classList.add('active');
+      const target = document.getElementById(tab.dataset.target);
+      if (target) target.classList.add('active');
+    });
+  });
+
+  // ══════════════════════════════════════════════════════════════════
+  //  DYNAMIC CARD HOVER SHEEN EFFECT
+  // ══════════════════════════════════════════════════════════════════
+  const sheenCards = document.querySelectorAll('.benefit-card, .eligibility-card');
+  sheenCards.forEach(card => {
+    const sheen = document.createElement('div');
+    sheen.className = 'card-sheen';
+    card.appendChild(sheen);
+
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--sheen-x', `${x}px`);
+      card.style.setProperty('--sheen-y', `${y}px`);
+    }, { passive: true });
+  });
+
+ // ══════════════════════════════════════════════════════════════════
+//  EMAILJS INITIALIZATION & FORM SUBMISSION
+// ══════════════════════════════════════════════════════════════════
+
+// Initialize EmailJS
+if (typeof emailjs !== 'undefined') {
+  emailjs.init('QpkBmnT4LJ4PGyWTX');
+}
+
+// CV Upload Handler
+const cvInput = document.getElementById('reg-cv');
+const cvUploadArea = document.getElementById('cv-upload-area');
+const cvUploadText = document.getElementById('cv-upload-text');
+
+if (cvInput) {
+  cvInput.addEventListener('change', function () {
+    if (this.files && this.files[0]) {
+      const file = this.files[0];
+      const maxSize = 5 * 1024 * 1024; // 5MB
+
+      if (file.size > maxSize) {
+        alert('File size exceeds 5MB. Please upload a smaller file.');
+        this.value = '';
+        return;
+      }
+
+      const validTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      ];
+      if (!validTypes.includes(file.type)) {
+        alert('Please upload a PDF, DOC, or DOCX file.');
+        this.value = '';
+        return;
+      }
+
+      cvUploadText.textContent = file.name;
+      cvUploadText.classList.add('file-selected');
+      cvUploadArea.classList.add('has-file');
+    }
+  });
+}
+
+// Phone input — digits only
+const phoneInput = document.getElementById('reg-phone');
+if (phoneInput) {
+  phoneInput.addEventListener('input', function () {
+    this.value = this.value.replace(/[^0-9+\-\s]/g, '');
+  });
+}
+
+// Form Submission
+const regForm = document.getElementById('registration-form');
+if (regForm) {
+  regForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // Clear previous errors
+    this.querySelectorAll('.form-group').forEach(g => g.classList.remove('error'));
+
+    // Validate
+    const name = document.getElementById('reg-name');
+    const email = document.getElementById('reg-email');
+    const phone = document.getElementById('reg-phone');
+    const source = document.getElementById('reg-source');
+    const cv = document.getElementById('reg-cv');
+    let hasError = false;
+
+    if (!name.value.trim()) {
+      name.closest('.form-group').classList.add('error');
+      hasError = true;
+    }
+    if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+      email.closest('.form-group').classList.add('error');
+      hasError = true;
+    }
+    if (!phone.value.trim() || phone.value.replace(/[^0-9]/g, '').length < 10) {
+      phone.closest('.form-group').classList.add('error');
+      hasError = true;
+    }
+    if (!source.value) {
+      source.closest('.form-group').classList.add('error');
+      hasError = true;
+    }
+    if (!cv.files || !cv.files[0]) {
+      cv.closest('.form-group').classList.add('error');
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    // Disable button while submitting
+    const submitBtn = document.getElementById('form-submit-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="btn-loader"><svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg> SUBMITTING...</span>';
+
+    try {
+      // Use sendForm instead of send to handle files seamlessly.
+      // Make sure your form elements have matching 'name' attributes for your EmailJS Template tags!
+      await emailjs.sendForm('service_5ukbpwr', 'template_s33irls', this);
+
+      // Show success
+      const formCard = document.querySelector('.hero-form-card');
+      let successOverlay = formCard.querySelector('.form-success-overlay');
+      if (!successOverlay) {
+        successOverlay = document.createElement('div');
+        successOverlay.className = 'form-success-overlay';
+        successOverlay.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8 12l3 3 5-5"/>
+          </svg>
+          <h4>Application Sent!</h4>
+          <p>We've received your details. Our team will reach out to you soon.</p>
+        `;
+        formCard.appendChild(successOverlay);
+      }
+      setTimeout(() => successOverlay.classList.add('active'), 50);
+
+      // Reset form
+      regForm.reset();
+      cvUploadText.textContent = 'Click to upload your CV';
+      cvUploadText.classList.remove('file-selected');
+      cvUploadArea.classList.remove('has-file');
+
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      alert('Something went wrong. Please try again or contact us directly.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
+    }
+  });
+}
 
 });
